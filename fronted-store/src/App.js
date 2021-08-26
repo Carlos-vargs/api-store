@@ -3,6 +3,6 @@ import React  from 'react';
 
 export function App() {
   return (
-    d
+    <div>Example</div>
   )
 }
