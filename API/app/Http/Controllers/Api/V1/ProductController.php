@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Requests\V1\ProductRequest;
+use Illuminate\Support\Facades\Auth;
 
 
 class ProductController extends Controller
@@ -30,8 +31,9 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         $request->validated();
-
-        return Product::create($request->all());
+        
+        return Auth::user()->products()->create($request->all());
+    
         
         /*
         $product = new Product();
@@ -68,9 +70,18 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        $product->update($request->all());
+        if (Auth::id() === $product->user->id) {
 
-        return $product; 
+            $product->update($request->all());
+
+            return $product;
+
+        }
+
+        return response([
+            'message' => "you can't update another user's products",
+        ], 403); 
+
 
     }
 
@@ -80,9 +91,25 @@ class ProductController extends Controller
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        Product::destroy($id);
+        
+        $product = Product::find($id);
+
+        if (Auth::id() === $product->user->id) {
+
+            Product::destroy($id);
+
+            return [
+                'message' => 'Product deleted succesfully'
+            ];
+
+        }
+
+        return response([
+            'message' => "you can't delete another user's products",
+        ], 403); 
+
     }
 
     /**

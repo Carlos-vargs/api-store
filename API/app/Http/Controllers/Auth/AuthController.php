@@ -40,10 +40,6 @@ class AuthController extends Controller
 
         auth()->user()->tokens()->delete();
 
-        // $request->session()->invalidate();
-
-        // $request->session()->regenerateToken();
-
         return [
             'message' => 'logged out'
         ];
@@ -68,7 +64,6 @@ class AuthController extends Controller
         $response = [
             'user' => $user,
             'token' => $token, 
-            'login' => 'loging succesfull'
         ];
         
         return response($response, 201);
