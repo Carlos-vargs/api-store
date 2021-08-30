@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Http\Requests\V1;
+namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
-
-class ProductRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,8 +12,8 @@ class ProductRequest extends FormRequest
      * @return bool
      */
     public function authorize()
-    {       
-        return Auth::check();
+    {
+        return true;
     }
 
     /**
@@ -26,9 +24,8 @@ class ProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string',
-            'price' => 'required|numeric',
-            'description' => 'required|string',
+            'email' => 'required|string',
+            'password' => 'required|string',
         ];
     }
 }
