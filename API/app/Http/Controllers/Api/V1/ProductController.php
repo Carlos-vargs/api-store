@@ -32,7 +32,11 @@ class ProductController extends Controller
     {
         $request->validated();
         
-        return Auth::user()->products()->create($request->all());
+        Auth::user()->products()->create($request->all());
+        
+        return response([
+            'message' => 'Product created succesfully'
+        ], 201);
     
         
         /*
@@ -70,18 +74,14 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        if (Auth::id() === $product->user->id) {
+        $this->authorize('author', $product);
 
-            $product->update($request->all());
+        $product->update($request->all());
 
-            return $product;
-
-        }
-
-        return response([
-            'message' => "you can't update another user's products",
-        ], 403); 
-
+        return [
+            'Product' => $product,
+            'message' => 'Product updated succesfully'
+        ];
 
     }
 
@@ -96,19 +96,14 @@ class ProductController extends Controller
         
         $product = Product::find($id);
 
-        if (Auth::id() === $product->user->id) {
+        $this->authorize('author', $product);
 
-            Product::destroy($id);
+        $product->delete();
 
-            return [
-                'message' => 'Product deleted succesfully'
-            ];
+        return [
+            'message' => 'Product deleted succesfully'
+        ];
 
-        }
-
-        return response([
-            'message' => "you can't delete another user's products",
-        ], 403); 
 
     }
 
