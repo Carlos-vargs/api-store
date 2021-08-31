@@ -7,6 +7,7 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Requests\V1\ProductRequest;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\ProductResource;
 
 
 class ProductController extends Controller
@@ -19,7 +20,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::all();
+        return ProductResource::collection(Product::paginate()); 
     }
 
     /**
@@ -32,25 +33,21 @@ class ProductController extends Controller
     {
         $request->validated();
         
-        Auth::user()->products()->create($request->all());
+        $product = Auth::user()->products()->create($request->all());
         
+        $url_image = $request->file('image');
+
+        $image = $url_image->store('product', 'public');
+        
+        $product->productImages()->create(compact('image'));
+            
         return response([
             'message' => 'Product created succesfully'
         ], 201);
     
         
-        /*
-        $product = new Product();
-        
-        $product->title = $request->title;
-        $product->price = $request->price;
-        $product->description = $request->description;
-        
-        $product->save();
-        */
-        
-        
     }
+
 
     /**
      * Display the specified resource.

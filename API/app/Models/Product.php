@@ -13,6 +13,7 @@ class Product extends Model
         'title',
         'price',
         'description',
+        'product_id',
     ];
 
     /**
@@ -25,5 +26,14 @@ class Product extends Model
         return $this->belongsTo(User::class);
     }
     
+    /**
+     * Get all of the productImages for the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function productImages()
+    {
+        return $this->hasMany(ProductImages::class);
+    }
 
 }
