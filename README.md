@@ -21,7 +21,7 @@ $php artisan key:generate
 
 # After generating the .env file, you need to
 # Configure the database and run the migrations
-# The "DB_USERNAME" is optional depending on 
+# The "DB_PASSWORD" is optional depending on 
 # Your configuration in mysql
 
 DB_CONNECTION=mysql
